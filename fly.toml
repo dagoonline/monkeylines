@@ -1,0 +1,22 @@
+app = 'monkeylines'
+primary_region = 'cdg'
+
+[build]
+
+[env]
+  MONKEYLINES_HTTP_PORT = '8080'
+  MONKEYLINES_TCP_PORT = '8023'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[services]]
+  protocol = 'tcp'
+  internal_port = 8023
+
+  [[services.ports]]
+    port = 8023
