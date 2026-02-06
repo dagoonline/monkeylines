@@ -26,6 +26,7 @@ var tmpl *template.Template
 
 func handleTCPConnection(conn net.Conn) {
 	defer conn.Close()
+	conn.SetWriteDeadline(time.Now().Add(5 * time.Second))
 
 	clientAddr := conn.RemoteAddr().String()
 	log.Printf("TCP connection from %s", clientAddr)
@@ -72,7 +73,7 @@ func handlePlain(w http.ResponseWriter, r *http.Request) {
 	message := generateMessage()
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	fmt.Fprintln(w, message)
-	log.Printf("HTTP %s %s from %s - Served: %s", r.Method, r.URL.Path, r.RemoteAddr, message)
+	log.Printf("HTTP %s %s://%s%s from %s - Served: %s", r.Method, scheme(r), r.Host, r.URL.Path, r.RemoteAddr, message)
 }
 
 func handleHTTP(w http.ResponseWriter, r *http.Request) {
@@ -95,7 +96,14 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	buf.WriteTo(w)
 
-	log.Printf("HTTP %s %s from %s - Served: %s", r.Method, r.URL.Path, r.RemoteAddr, message)
+	log.Printf("HTTP %s %s://%s%s from %s - Served: %s", r.Method, scheme(r), r.Host, r.URL.Path, r.RemoteAddr, message)
+}
+
+func scheme(r *http.Request) string {
+	if r.TLS != nil || r.Header.Get("X-Forwarded-Proto") == "https" {
+		return "https"
+	}
+	return "http"
 }
 
 func getEnv(key, fallback string) string {
@@ -123,6 +131,16 @@ func main() {
 
 	go startTCPServer(ctx, tcpPort)
 
+	securityHeaders := func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("X-Content-Type-Options", "nosniff")
+			w.Header().Set("X-Frame-Options", "DENY")
+			w.Header().Set("Referrer-Policy", "no-referrer")
+			w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self'")
+			next.ServeHTTP(w, r)
+		})
+	}
+
 	imageServer := http.FileServer(http.FS(imagesFS))
 
 	mux := http.NewServeMux()
@@ -134,12 +152,17 @@ func main() {
 	mux.HandleFunc("/", handleHTTP)
 
 	httpServer := &http.Server{
-		Addr:    ":" + httpPort,
-		Handler: mux,
+		Addr:              ":" + httpPort,
+		Handler:           securityHeaders(mux),
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       10 * time.Second,
+		WriteTimeout:      10 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		MaxHeaderBytes:    1 << 20,
 	}
 
-	log.Printf("HTTP: http://localhost:%s", httpPort)
-	log.Printf("TCP:  telnet localhost %s", tcpPort)
+	log.Printf("HTTP: port %s", httpPort)
+	log.Printf("TCP:  port %s", tcpPort)
 	log.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
 	go func() {
