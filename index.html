@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MonkeyLines</title>
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'VT323', monospace;
+            background: #222;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .monkey-scene {
+            position: relative;
+            width: 100%;
+        }
+
+        .monkey-scene img {
+            width: 100%;
+            height: auto;
+            display: block;
+            image-rendering: pixelated;
+        }
+
+        .monkey-scene img:last-of-type {
+            position: absolute;
+            top: 0;
+            left: 0;
+            visibility: hidden;
+        }
+
+        .monkey-scene img.monkey-visible {
+            visibility: visible;
+        }
+
+        .speech-text {
+            position: absolute;
+            top: 11%;
+            left: 27%;
+            width: 45%;
+            height: 18%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 8px;
+            font-family: 'VT323', monospace;
+            font-size: clamp(10px, 2vw, 18px);
+            color: #1a0a2e;
+            line-height: 1.2;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .dialogue-btn {
+            display: block;
+            margin: 20px auto 0;
+            font-family: 'VT323', monospace;
+            font-size: 1.3em;
+            color: #f5e6c8;
+            background: linear-gradient(180deg, #5c3a1e 0%, #3b2210 100%);
+            border: 3px solid #8b5e3c;
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 12px 30px;
+            text-shadow: 1px 1px 2px #000;
+            text-decoration: none;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                0 3px 6px rgba(0, 0, 0, 0.5);
+            transition: all 0.15s;
+        }
+
+        .dialogue-btn:hover {
+            background: linear-gradient(180deg, #7a4e2a 0%, #5c3a1e 100%);
+            border-color: #c4884a;
+            color: #ffe4a8;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                0 3px 8px rgba(0, 0, 0, 0.6),
+                0 0 12px rgba(196, 136, 74, 0.3);
+        }
+
+        .dialogue-btn:active {
+            background: linear-gradient(180deg, #3b2210 0%, #2a1808 100%);
+            box-shadow:
+                inset 0 2px 4px rgba(0, 0, 0, 0.4),
+                0 1px 2px rgba(0, 0, 0, 0.5);
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="monkey-scene">
+            <img src="/images/1.png" alt="Three-headed monkey">
+            <img id="monkey-2" src="/images/2.png" alt="Three-headed monkey">
+            <div class="speech-text" id="speech-text"></div>
+        </div>
+        <button class="dialogue-btn" onclick="window.location.reload()">Draw your sword again...</button>
+    </div>
+
+    <script>
+        (function() {
+            var fullText = {{.Message}};
+            var el = document.getElementById('speech-text');
+            var overlay = document.getElementById('monkey-2');
+            var i = 0;
+            var swapTimer = null;
+
+            function randomInterval() {
+                return 100 + Math.random() * 100;
+            }
+
+            function swapImage() {
+                overlay.classList.toggle('monkey-visible');
+                swapTimer = setTimeout(swapImage, randomInterval());
+            }
+
+            function stopSwap() {
+                if (swapTimer) clearTimeout(swapTimer);
+                overlay.classList.remove('monkey-visible');
+            }
+
+            function type() {
+                if (i < fullText.length) {
+                    el.textContent = fullText.substring(0, i + 1);
+                    i++;
+                    setTimeout(type, 40);
+                } else {
+                    stopSwap();
+                }
+            }
+
+            swapImage();
+            type();
+        })();
+    </script>
+</body>
+</html>

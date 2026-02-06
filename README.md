@@ -1,21 +1,22 @@
 # MonkeyLines
 
-A dual-protocol server that delivers Monkey Island sword fighting-style insults via both TCP and HTTP.
+A dual-protocol server that delivers Monkey Island sword fighting-style insults via TCP, HTTP, and a plain text API.
 
 > "You code like a dairy farmer!"
 > "How appropriate. You debug like a cow."
 
 ## What is this?
 
-MonkeyLines is a fun service that generates procedurally created insults and comebacks inspired by *The Secret of Monkey Island*'s iconic sword fighting mechanic. It runs as both a TCP server (for terminal/telnet access) and an HTTP server (for web browser access).
+MonkeyLines is a fun service that generates procedurally created insults and comebacks inspired by *The Secret of Monkey Island*'s iconic sword fighting mechanic. It features an animated three-headed monkey web interface, a TCP server for terminal access, and a plain text API endpoint.
 
 ## Features
 
+- **HTTP Server** - Animated pixel-art three-headed monkey with typewriter speech bubble effect
 - **TCP Server** - Connect via telnet/netcat and receive instant insults
-- **HTTP Server** - Beautiful web interface with gradient styling
+- **Plain Text API** - `GET /line` returns just the text, perfect for scripting
 - **Message Generator** - Thousands of unique combinations of insults and comebacks
 - **Concurrent** - Handles multiple connections simultaneously
-- **Logging** - Tracks all connections and served messages
+- **Single Binary** - All assets (HTML, images) embedded at compile time
 
 ## Installation
 
@@ -39,20 +40,29 @@ go build -o monkeylines .
 ./monkeylines
 ```
 
-The server will start both:
-- **HTTP server** on port 8080
-- **TCP server** on port 8023
+The server starts three endpoints:
+- **HTTP server** on port `8080` (web interface)
+- **Plain text API** on port `8080` at `/line`
+- **TCP server** on port `8023`
 
-### Access via Web Browser
+### Web Interface
 
 Open your browser and navigate to:
 ```
 http://localhost:8080
 ```
 
-Each refresh generates a new insult. The page features a beautiful gradient design with the insult prominently displayed.
+Features an animated three-headed monkey from Monkey Island that "talks" the insult via a typewriter effect in a speech bubble. Click "Draw your sword again..." to get a new insult.
 
-### Access via TCP/Telnet
+### Plain Text API
+
+```bash
+curl http://localhost:8080/line
+```
+
+Returns a single line of text — useful for scripts, bots, or piping into other commands.
+
+### TCP/Telnet
 
 ```bash
 # Using telnet
@@ -67,23 +77,18 @@ echo "" | nc localhost 8023
 
 Each connection receives a fresh insult and automatically disconnects.
 
-## Examples
+## Configuration
 
-### TCP Session
-```
-$ telnet localhost 8023
-Trying 127.0.0.1...
-Connected to localhost.
-Your functions are as useless as a merge conflict!
-Connection closed by foreign host.
-```
+Ports are configurable via environment variables:
 
-### Web Interface
-Access `http://localhost:8080` to see a beautifully styled page with:
-- Gradient purple background
-- Centered card with the insult
-- Button to generate new insults
-- Instructions for TCP access
+| Variable | Default | Description |
+|---|---|---|
+| `MONKEYLINES_TCP_PORT` | `8023` | TCP server port |
+| `MONKEYLINES_HTTP_PORT` | `8080` | HTTP server port (web + API) |
+
+```bash
+MONKEYLINES_HTTP_PORT=3000 MONKEYLINES_TCP_PORT=2323 ./monkeylines
+```
 
 ## Message Generator
 
@@ -99,28 +104,14 @@ This creates thousands of unique message combinations.
 ## Architecture
 
 - **Concurrent design** - TCP connections handled in goroutines
-- **Thread-safe** - Protected shared state with mutexes
-- **Single binary** - No external dependencies
-- **Embedded template** - HTML template compiled into binary
-
-## Configuration
-
-Default ports can be modified in `main.go`:
-- `tcpPort := "8023"` - TCP server port
-- `httpPort := "8080"` - HTTP server port
+- **Embedded assets** - HTML template and images compiled into the binary via `go:embed`
+- **Single binary** - No external dependencies or runtime files needed
+- **Image caching** - Static assets served with one-week cache headers
 
 ## Requirements
 
 - Go 1.21+ (for building)
 - No external dependencies - uses only Go standard library
-
-## Use Cases
-
-- Fun addition to your local dev environment
-- Testing TCP/HTTP client implementations
-- Learning concurrent server design in Go
-- Adding personality to monitoring dashboards
-- Party trick at developer meetups
 
 ## License
 
