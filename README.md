@@ -1,22 +1,21 @@
 # MonkeyLines
 
-A dual-protocol server that delivers Monkey Island sword fighting-style insults via TCP, HTTP, and a plain text API.
+An HTTP server that delivers Monkey Island sword fighting-style insults with an animated three-headed monkey.
 
 > "You code like a dairy farmer!"
 > "How appropriate. You debug like a cow."
 
 ## What is this?
 
-MonkeyLines is a fun service that generates procedurally created insults and comebacks inspired by *The Secret of Monkey Island*'s iconic sword fighting mechanic. It features an animated three-headed monkey web interface, a TCP server for terminal access, and a plain text API endpoint.
+MonkeyLines is a fun service that generates procedurally created insults and comebacks inspired by *The Secret of Monkey Island*'s iconic sword fighting mechanic. It features an animated pixel-art three-headed monkey web interface and a plain text API endpoint.
 
 ## Features
 
-- **HTTP Server** - Animated pixel-art three-headed monkey with typewriter speech bubble effect
-- **TCP Server** - Connect via telnet/netcat and receive instant insults
+- **Web Interface** - Animated pixel-art three-headed monkey with typewriter speech bubble effect
 - **Plain Text API** - `GET /line` returns just the text, perfect for scripting
 - **Message Generator** - Thousands of unique combinations of insults and comebacks
-- **Concurrent** - Handles multiple connections simultaneously
 - **Single Binary** - All assets (HTML, images) embedded at compile time
+- **Security Hardened** - CSP headers, server timeouts, safe template rendering
 
 ## Installation
 
@@ -40,10 +39,9 @@ go build -o monkeylines .
 ./monkeylines
 ```
 
-The server starts three endpoints:
-- **HTTP server** on port `8080` (web interface)
-- **Plain text API** on port `8080` at `/line`
-- **TCP server** on port `8023`
+The server starts on port `8080` with two endpoints:
+- `/` — Web interface
+- `/line` — Plain text API
 
 ### Web Interface
 
@@ -62,32 +60,16 @@ curl http://localhost:8080/line
 
 Returns a single line of text — useful for scripts, bots, or piping into other commands.
 
-### TCP/Telnet
-
-```bash
-# Using telnet
-telnet localhost 8023
-
-# Using netcat
-nc localhost 8023
-
-# Using echo/pipeline
-echo "" | nc localhost 8023
-```
-
-Each connection receives a fresh insult and automatically disconnects.
-
 ## Configuration
 
-Ports are configurable via environment variables:
+The port is configurable via environment variable:
 
 | Variable | Default | Description |
 |---|---|---|
-| `MONKEYLINES_TCP_PORT` | `8023` | TCP server port |
-| `MONKEYLINES_HTTP_PORT` | `8080` | HTTP server port (web + API) |
+| `MONKEYLINES_HTTP_PORT` | `8080` | HTTP server port |
 
 ```bash
-MONKEYLINES_HTTP_PORT=3000 MONKEYLINES_TCP_PORT=2323 ./monkeylines
+MONKEYLINES_HTTP_PORT=3000 ./monkeylines
 ```
 
 ## Message Generator
@@ -103,15 +85,19 @@ This creates thousands of unique message combinations.
 
 ## Architecture
 
-- **Concurrent design** - TCP connections handled in goroutines
 - **Embedded assets** - HTML template and images compiled into the binary via `go:embed`
 - **Single binary** - No external dependencies or runtime files needed
 - **Image caching** - Static assets served with one-week cache headers
+- **Security headers** - CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy
 
 ## Requirements
 
 - Go 1.21+ (for building)
 - No external dependencies - uses only Go standard library
+
+## Motivation
+
+This project was built as a hands-on test of [Claude Opus 4.6](https://www.anthropic.com/claude) — the entire codebase was written collaboratively with it using [Claude Code](https://claude.com/claude-code).
 
 ## License
 

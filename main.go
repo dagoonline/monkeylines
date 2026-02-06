@@ -1,14 +1,12 @@
 package main
 
 import (
-	"bufio"
 	"bytes"
 	"context"
 	"embed"
 	"fmt"
 	"html/template"
 	"log"
-	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -23,51 +21,6 @@ var indexHTML string
 var imagesFS embed.FS
 
 var tmpl *template.Template
-
-func handleTCPConnection(conn net.Conn) {
-	defer conn.Close()
-	conn.SetWriteDeadline(time.Now().Add(5 * time.Second))
-
-	clientAddr := conn.RemoteAddr().String()
-	log.Printf("TCP connection from %s", clientAddr)
-
-	message := generateMessage()
-
-	writer := bufio.NewWriter(conn)
-	fmt.Fprintf(writer, "%s\n", message)
-	writer.Flush()
-
-	log.Printf("Sent to %s: %s", clientAddr, message)
-}
-
-func startTCPServer(ctx context.Context, port string) {
-	lc := net.ListenConfig{}
-	listener, err := lc.Listen(ctx, "tcp", ":"+port)
-	if err != nil {
-		log.Fatalf("Failed to start TCP server: %v", err)
-	}
-	defer listener.Close()
-
-	log.Printf("TCP server listening on port %s", port)
-
-	go func() {
-		<-ctx.Done()
-		listener.Close()
-	}()
-
-	for {
-		conn, err := listener.Accept()
-		if err != nil {
-			if ctx.Err() != nil {
-				return
-			}
-			log.Printf("Failed to accept connection: %v", err)
-			continue
-		}
-
-		go handleTCPConnection(conn)
-	}
-}
 
 func handlePlain(w http.ResponseWriter, r *http.Request) {
 	message := generateMessage()
@@ -120,7 +73,6 @@ func main() {
 		log.Fatal("Failed to parse template:", err)
 	}
 
-	tcpPort := getEnv("MONKEYLINES_TCP_PORT", "8023")
 	httpPort := getEnv("MONKEYLINES_HTTP_PORT", "8080")
 
 	log.Println("MonkeyLines Server Starting...")
@@ -128,8 +80,6 @@ func main() {
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
-
-	go startTCPServer(ctx, tcpPort)
 
 	securityHeaders := func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -162,7 +112,6 @@ func main() {
 	}
 
 	log.Printf("HTTP: port %s", httpPort)
-	log.Printf("TCP:  port %s", tcpPort)
 	log.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
 	go func() {
@@ -172,7 +121,7 @@ func main() {
 	}()
 
 	<-ctx.Done()
-	log.Println("Shutting down servers...")
+	log.Println("Shutting down server...")
 
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

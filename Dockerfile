@@ -13,6 +13,6 @@ FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/monkeylines .
 
-EXPOSE 8080 8023
+EXPOSE 8080
 
 CMD ["./monkeylines"]
