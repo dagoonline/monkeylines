@@ -98,12 +98,18 @@ func randomChoice[T any](slice []T) T {
 	return slice[rand.Intn(len(slice))]
 }
 
-func generateMessage() string {
-	if rand.Intn(2) == 0 {
-		tpl := randomChoice(insultTemplates)
-		return fmt.Sprintf(tpl, randomChoice(insultNouns))
-	}
+var sideMonkeys = []string{"l", "r"}
 
+func randomSideMonkey() string {
+	return sideMonkeys[rand.Intn(len(sideMonkeys))]
+}
+
+func generateInsult() string {
+	tpl := randomChoice(insultTemplates)
+	return fmt.Sprintf(tpl, randomChoice(insultNouns))
+}
+
+func generateComeback() string {
 	cb := randomChoice(comebackTemplates)
 	noun := randomChoice(comebackNouns)
 
@@ -123,4 +129,11 @@ func generateMessage() string {
 	default:
 		return fmt.Sprintf(cb.format, randomChoice(verbs), noun)
 	}
+}
+
+func generateMessage() string {
+	if rand.Intn(2) == 0 {
+		return generateInsult()
+	}
+	return generateComeback()
 }

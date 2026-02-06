@@ -14,7 +14,7 @@
 
         body {
             font-family: monospace;
-            background: #222;
+            background: #181818;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -31,7 +31,7 @@
             position: relative;
             width: 100%;
             aspect-ratio: 1 / 1;
-            background: #222;
+            background: #181818;
         }
 
         .monkey-scene img {
@@ -41,20 +41,20 @@
             image-rendering: pixelated;
         }
 
-        .monkey-scene img:last-of-type {
+        .monkey-overlay {
             position: absolute;
             top: 0;
             left: 0;
             visibility: hidden;
         }
 
-        .monkey-scene img.monkey-visible {
+        .monkey-overlay.monkey-visible {
             visibility: visible;
         }
 
         .speech-text {
             position: absolute;
-            top: 11%;
+            top: 5%;
             left: 27%;
             width: 45%;
             height: 18%;
@@ -128,9 +128,11 @@
 <body>
     <div class="container">
         <div class="monkey-scene">
-            <img src="/images/1.png" alt="Three-headed monkey">
-            <img id="monkey-2" src="/images/2.png" alt="Three-headed monkey">
-            <div class="speech-text" id="speech-text" data-initial="{{.Message}}"></div>
+            <img src="/images/base.png" alt="Three-headed monkey">
+            <img class="monkey-overlay" id="monkey-l" src="/images/l.png" alt="">
+            <img class="monkey-overlay" id="monkey-c" src="/images/c.png" alt="">
+            <img class="monkey-overlay" id="monkey-r" src="/images/r.png" alt="">
+            <div class="speech-text" id="speech-text" data-insult="{{.Insult}}" data-monkey="{{.Monkey}}"></div>
         </div>
         <button class="dialogue-btn" id="reload-btn">Draw your sword again...</button>
         <a class="footer-link" href="https://github.com/dagoonline/monkeylines" target="_blank" aria-label="github.com/dagoonline/monkeylines"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.3-3.2-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6.2 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.7.2 2.9.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.7-2.8 5.7-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg></a>
@@ -139,52 +141,97 @@
     <script>
         (function() {
             var el = document.getElementById('speech-text');
-            var overlay = document.getElementById('monkey-2');
             var btn = document.getElementById('reload-btn');
+            var overlays = {
+                l: document.getElementById('monkey-l'),
+                c: document.getElementById('monkey-c'),
+                r: document.getElementById('monkey-r')
+            };
+            var allMonkeys = ['l', 'c', 'r'];
+            var sideMonkeys = ['l', 'r'];
             var swapTimer = null;
-            var typing = false;
+            var busy = false;
 
             function randomInterval() {
                 return 100 + Math.random() * 100;
             }
 
-            function swapImage() {
-                overlay.classList.toggle('monkey-visible');
-                swapTimer = setTimeout(swapImage, randomInterval());
-            }
-
-            function stopSwap() {
-                if (swapTimer) clearTimeout(swapTimer);
-                swapTimer = null;
-                overlay.classList.remove('monkey-visible');
-            }
-
-            function typeText(text) {
-                typing = true;
-                el.textContent = '';
-                var i = 0;
-                swapImage();
-                function step() {
-                    if (i < text.length) {
-                        el.textContent = text.substring(0, i + 1);
-                        i++;
-                        setTimeout(step, 40);
-                    } else {
-                        stopSwap();
-                        typing = false;
-                    }
+            function showOverlay(monkey) {
+                allMonkeys.forEach(function(m) {
+                    overlays[m].classList.remove('monkey-visible');
+                });
+                if (monkey) {
+                    overlays[monkey].classList.add('monkey-visible');
                 }
-                step();
+            }
+
+            function pickSideMonkey() {
+                return sideMonkeys[Math.floor(Math.random() * sideMonkeys.length)];
+            }
+
+            function typeText(text, monkey) {
+                return new Promise(function(resolve) {
+                    el.textContent = '';
+                    showOverlay(null);
+                    var i = 0;
+
+                    function toggleMouth() {
+                        overlays[monkey].classList.toggle('monkey-visible');
+                        swapTimer = setTimeout(toggleMouth, randomInterval());
+                    }
+                    toggleMouth();
+
+                    function step() {
+                        if (i < text.length) {
+                            el.textContent = text.substring(0, i + 1);
+                            i++;
+                            setTimeout(step, 40);
+                        } else {
+                            clearTimeout(swapTimer);
+                            swapTimer = null;
+                            showOverlay(monkey);
+                            resolve();
+                        }
+                    }
+                    step();
+                });
+            }
+
+            function delay(ms) {
+                return new Promise(function(resolve) { setTimeout(resolve, ms); });
+            }
+
+            function runExchange(insultText, firstMonkey) {
+                busy = true;
+                var monkeyA = firstMonkey || pickSideMonkey();
+
+                var insultPromise = insultText
+                    ? Promise.resolve(insultText)
+                    : fetch('/insult').then(function(r) { return r.text(); }).then(function(t) { return t.trim(); });
+
+                insultPromise
+                    .then(function(insult) { return typeText(insult, monkeyA); })
+                    .then(function() { return delay(2000); })
+                    .then(function() {
+                        return fetch('/comeback').then(function(r) { return r.text(); }).then(function(t) { return t.trim(); });
+                    })
+                    .then(function(comeback) {
+                        return typeText(comeback, 'c');
+                    })
+                    .then(function() { return delay(2000); })
+                    .then(function() {
+                        el.textContent = '';
+                        showOverlay(null);
+                        busy = false;
+                    });
             }
 
             btn.addEventListener('click', function() {
-                if (typing) return;
-                fetch('/line')
-                    .then(function(r) { return r.text(); })
-                    .then(function(text) { typeText(text.trim()); });
+                if (busy) return;
+                runExchange();
             });
 
-            typeText(el.getAttribute('data-initial'));
+            runExchange(el.getAttribute('data-insult'), el.getAttribute('data-monkey'));
         })();
     </script>
 </body>

@@ -24,11 +24,25 @@ var imagesFS embed.FS
 
 var tmpl *template.Template
 
+func handleInsult(w http.ResponseWriter, r *http.Request) {
+	message := generateInsult()
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	fmt.Fprintln(w, message)
+	log.Printf("HTTP %s %s://%s%s from %s - Served insult: %s", r.Method, scheme(r), r.Host, r.URL.Path, clientIP(r), message)
+}
+
 func handlePlain(w http.ResponseWriter, r *http.Request) {
 	message := generateMessage()
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	fmt.Fprintln(w, message)
 	log.Printf("HTTP %s %s://%s%s from %s - Served: %s", r.Method, scheme(r), r.Host, r.URL.Path, clientIP(r), message)
+}
+
+func handleComeback(w http.ResponseWriter, r *http.Request) {
+	message := generateComeback()
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	fmt.Fprintln(w, message)
+	log.Printf("HTTP %s %s://%s%s from %s - Served comeback: %s", r.Method, scheme(r), r.Host, r.URL.Path, clientIP(r), message)
 }
 
 func handleHTTP(w http.ResponseWriter, r *http.Request) {
@@ -37,9 +51,13 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	message := generateMessage()
+	insult := generateInsult()
+	monkey := randomSideMonkey()
 
-	data := struct{ Message string }{Message: message}
+	data := struct {
+		Insult string
+		Monkey string
+	}{Insult: insult, Monkey: monkey}
 
 	var buf bytes.Buffer
 	if err := tmpl.Execute(&buf, data); err != nil {
@@ -51,7 +69,7 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	buf.WriteTo(w)
 
-	log.Printf("HTTP %s %s://%s%s from %s - Served: %s", r.Method, scheme(r), r.Host, r.URL.Path, clientIP(r), message)
+	log.Printf("HTTP %s %s://%s%s from %s - Served insult (%s): %s", r.Method, scheme(r), r.Host, r.URL.Path, clientIP(r), monkey, insult)
 }
 
 func clientIP(r *http.Request) string {
@@ -118,6 +136,8 @@ func main() {
 		imageServer.ServeHTTP(w, r)
 	})
 	mux.HandleFunc("/line", handlePlain)
+	mux.HandleFunc("/insult", handleInsult)
+	mux.HandleFunc("/comeback", handleComeback)
 	mux.HandleFunc("/", handleHTTP)
 
 	httpServer := &http.Server{
