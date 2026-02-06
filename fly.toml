@@ -1,8 +1,6 @@
 app = 'monkeylines'
 primary_region = 'cdg'
 
-[build]
-
 [env]
   MONKEYLINES_HTTP_PORT = '8080'
   MONKEYLINES_TCP_PORT = '8023'

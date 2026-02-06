@@ -123,10 +123,12 @@ func main() {
 
 	go startTCPServer(ctx, tcpPort)
 
+	imageServer := http.FileServer(http.FS(imagesFS))
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/images/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "public, max-age=604800")
-		http.FileServer(http.FS(imagesFS)).ServeHTTP(w, r)
+		imageServer.ServeHTTP(w, r)
 	})
 	mux.HandleFunc("/line", handlePlain)
 	mux.HandleFunc("/", handleHTTP)
