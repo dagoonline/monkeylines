@@ -115,16 +115,16 @@
             <img id="monkey-2" src="/images/2.png" alt="Three-headed monkey">
             <div class="speech-text" id="speech-text"></div>
         </div>
-        <button class="dialogue-btn" onclick="window.location.reload()">Draw your sword again...</button>
+        <button class="dialogue-btn" id="reload-btn">Draw your sword again...</button>
     </div>
 
     <script>
         (function() {
-            var fullText = {{.Message}};
             var el = document.getElementById('speech-text');
             var overlay = document.getElementById('monkey-2');
-            var i = 0;
+            var btn = document.getElementById('reload-btn');
             var swapTimer = null;
+            var typing = false;
 
             function randomInterval() {
                 return 100 + Math.random() * 100;
@@ -137,21 +137,36 @@
 
             function stopSwap() {
                 if (swapTimer) clearTimeout(swapTimer);
+                swapTimer = null;
                 overlay.classList.remove('monkey-visible');
             }
 
-            function type() {
-                if (i < fullText.length) {
-                    el.textContent = fullText.substring(0, i + 1);
-                    i++;
-                    setTimeout(type, 40);
-                } else {
-                    stopSwap();
+            function typeText(text) {
+                typing = true;
+                el.textContent = '';
+                var i = 0;
+                swapImage();
+                function step() {
+                    if (i < text.length) {
+                        el.textContent = text.substring(0, i + 1);
+                        i++;
+                        setTimeout(step, 40);
+                    } else {
+                        stopSwap();
+                        typing = false;
+                    }
                 }
+                step();
             }
 
-            swapImage();
-            type();
+            btn.addEventListener('click', function() {
+                if (typing) return;
+                fetch('/line')
+                    .then(function(r) { return r.text(); })
+                    .then(function(text) { typeText(text.trim()); });
+            });
+
+            typeText({{.Message}});
         })();
     </script>
 </body>
