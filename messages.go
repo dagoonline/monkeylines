@@ -188,12 +188,6 @@ func randomChoice[T any](slice []T) T {
 	return slice[rand.Intn(len(slice))]
 }
 
-var sideMonkeyList = []string{"l", "r"}
-
-func randomSideMonkey() string {
-	return sideMonkeyList[rand.Intn(len(sideMonkeyList))]
-}
-
 func generateExchange() exchange {
 	t := randomChoice(themes)
 	noun1 := randomChoice(t.nouns)

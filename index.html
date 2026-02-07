@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MonkeyLines</title>
+    <meta property="og:title" content="MonkeyLines">
+    <meta property="og:description" content="Insult sword fighting with a three-headed monkey. Inspired by The Secret of Monkey Island.">
+    <meta property="og:image" content="{{.}}/images/base.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="MonkeyLines">
+    <meta name="twitter:description" content="Insult sword fighting with a three-headed monkey. Inspired by The Secret of Monkey Island.">
+    <meta name="twitter:image" content="{{.}}/images/base.png">
+    <meta name="description" content="Insult sword fighting with a three-headed monkey. Inspired by The Secret of Monkey Island.">
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
     <style>
         * {
@@ -54,25 +63,27 @@
 
         .speech-text {
             position: absolute;
-            top: 5%;
-            left: 27%;
-            width: 45%;
-            height: 18%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            top: 8%;
+            left: 24%;
+            width: 54%;
+            height: 14%;
             padding: 4px 8px;
             font-family: monospace;
-            font-size: clamp(10px, 2vw, 18px);
+            font-size: clamp(16px, 2vw, 20px);
             color: #1a0a2e;
             line-height: 1.2;
-            text-align: center;
+            text-align: left;
             overflow: hidden;
         }
 
-        .dialogue-btn {
-            display: block;
+        .btn-row {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
             margin: 20px auto 0;
+        }
+
+        .dialogue-btn {
             font-size: 2.5em;
             background: #1a1a1a;
             border: 3px solid #333;
@@ -107,6 +118,11 @@
             opacity: 0.3;
             cursor: default;
         }
+
+        .dialogue-btn.active {
+            border-color: #4a9a4a;
+            box-shadow: 0 6px 0 #0a0a0a, 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 12px rgba(74, 154, 74, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -118,7 +134,10 @@
             <img class="monkey-overlay" id="monkey-r" src="/images/r.png" alt="">
             <div class="speech-text" id="speech-text"></div>
         </div>
-        <button class="dialogue-btn" id="reload-btn">⚔️</button>
+        <div class="btn-row">
+            <button class="dialogue-btn" id="reload-btn">⚔️</button>
+            <button class="dialogue-btn" id="auto-btn">🙊</button>
+        </div>
         <a class="footer-link" href="https://github.com/dagoonline/monkeylines" target="_blank" aria-label="github.com/dagoonline/monkeylines"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.3-3.2-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6.2 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.7.2 2.9.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.7-2.8 5.7-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg></a>
     </div>
 
@@ -126,6 +145,7 @@
         (function() {
             var el = document.getElementById('speech-text');
             var btn = document.getElementById('reload-btn');
+            var autoBtn = document.getElementById('auto-btn');
             var overlays = {
                 l: document.getElementById('monkey-l'),
                 c: document.getElementById('monkey-c'),
@@ -135,6 +155,7 @@
             var sideMonkeys = ['l', 'r'];
             var swapTimer = null;
             var busy = false;
+            var autoPlay = false;
 
             function randomInterval() {
                 return 100 + Math.random() * 100;
@@ -155,7 +176,13 @@
 
             function typeText(text, monkey) {
                 return new Promise(function(resolve) {
+                    var visible = document.createElement('span');
+                    var hidden = document.createElement('span');
+                    hidden.style.visibility = 'hidden';
+                    hidden.textContent = text;
                     el.textContent = '';
+                    el.appendChild(visible);
+                    el.appendChild(hidden);
                     showOverlay(null);
                     var i = 0;
 
@@ -167,7 +194,8 @@
 
                     function step() {
                         if (i < text.length) {
-                            el.textContent = text.substring(0, i + 1);
+                            visible.textContent = text.substring(0, i + 1);
+                            hidden.textContent = text.substring(i + 1);
                             i++;
                             setTimeout(step, 40);
                         } else {
@@ -188,6 +216,7 @@
             function runExchange() {
                 busy = true;
                 btn.disabled = true;
+                if (!autoPlay) autoBtn.disabled = true;
                 var monkeyA = pickSideMonkey();
 
                 fetch('/exchange')
@@ -199,14 +228,43 @@
                     })
                     .then(function() {
                         showOverlay(null);
+                        if (autoPlay) {
+                            return delay(2000);
+                        }
+                    })
+                    .then(function() {
+                        busy = false;
+                        if (!autoPlay) {
+                            btn.disabled = false;
+                            autoBtn.disabled = false;
+                        } else {
+                            runExchange();
+                        }
+                    })
+                    .catch(function() {
+                        showOverlay(null);
                         busy = false;
                         btn.disabled = false;
+                        autoBtn.disabled = false;
+                        autoPlay = false;
+                        autoBtn.classList.remove('active');
                     });
             }
 
             btn.addEventListener('click', function() {
                 if (busy) return;
                 runExchange();
+            });
+
+            autoBtn.addEventListener('click', function() {
+                autoPlay = !autoPlay;
+                autoBtn.classList.toggle('active', autoPlay);
+                if (autoPlay) {
+                    btn.disabled = true;
+                    if (!busy) runExchange();
+                } else {
+                    if (!busy) btn.disabled = false;
+                }
             });
 
         })();

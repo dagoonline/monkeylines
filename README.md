@@ -3,7 +3,7 @@
 An HTTP server that delivers Monkey Island sword fighting-style insults with an animated three-headed monkey.
 
 > "You code like a dairy farmer!"
-> "How appropriate. You debug like a cow."
+> "How appropriate. You fight like a cow."
 
 ## What is this?
 
@@ -12,10 +12,14 @@ MonkeyLines is a fun service that generates procedurally created insults and com
 ## Features
 
 - **Web Interface** - Animated pixel-art three-headed monkey with typewriter speech bubble effect
+- **Insult Sword Fighting** - Side monkeys throw insults, center monkey delivers themed comebacks
+- **Auto-play Mode** - Toggle continuous exchanges with the 🙊 button
 - **Plain Text API** - `GET /line` returns just the text, perfect for scripting
-- **Message Generator** - Thousands of unique combinations of insults and comebacks
+- **Exchange API** - `GET /exchange` returns a paired insult/comeback as JSON
+- **Themed Generator** - 8 themes with thousands of unique insult/comeback combinations
 - **Single Binary** - All assets (HTML, images) embedded at compile time
 - **Security Hardened** - CSP headers, server timeouts, safe template rendering
+- **CI/CD** - GitHub Actions workflow for automatic deployment to Fly.io
 
 ## Installation
 
@@ -39,9 +43,10 @@ go build -o monkeylines .
 ./monkeylines
 ```
 
-The server starts on port `8080` with two endpoints:
+The server starts on port `8080` with the following endpoints:
 - `/` — Web interface
-- `/line` — Plain text API
+- `/line` — Plain text API (random insult or comeback)
+- `/exchange` — JSON API (paired insult + comeback)
 
 ### Web Interface
 
@@ -50,7 +55,7 @@ Open your browser and navigate to:
 http://localhost:8080
 ```
 
-Features an animated three-headed monkey from Monkey Island that "talks" the insult via a typewriter effect in a speech bubble. Click "Draw your sword again..." to get a new insult.
+Features an animated three-headed monkey from Monkey Island. Press ⚔️ to trigger an insult sword fight — a side monkey delivers the insult, then the center monkey fires back with a themed comeback. Press 🙊 to enable auto-play mode for continuous exchanges.
 
 ### Plain Text API
 
@@ -59,6 +64,18 @@ curl http://localhost:8080/line
 ```
 
 Returns a single line of text — useful for scripts, bots, or piping into other commands.
+
+### Exchange API
+
+```bash
+curl http://localhost:8080/exchange
+```
+
+Returns a JSON object with a paired insult and comeback:
+
+```json
+{"Insult":"You code like a dairy farmer!","Comeback":"How appropriate. You fight like a cow."}
+```
 
 ## Configuration
 
@@ -74,14 +91,27 @@ MONKEYLINES_HTTP_PORT=3000 ./monkeylines
 
 ## Message Generator
 
-The generator combines:
-- **15 insult templates** - "You code like a {noun}!"
-- **15 comeback templates** - "How appropriate. You {verb} like a {noun}."
-- **20 insult nouns** - dairy farmer, null pointer, spaghetti monster...
-- **20 comeback nouns** - cow, compiler, garbage collector...
-- **18 verbs** - debug, compile, refactor, deploy...
+The generator uses a themed template system. Each theme groups related insult templates, comeback templates, and a shared word list:
 
-This creates thousands of unique message combinations.
+- **8 themes** - Classic Monkey Island, code quality, debugging, deployments, git history, error handling, architecture, testing
+- **4 insult templates per theme** - "You code like a %s!"
+- **4 comeback templates per theme** - "How appropriate. You fight like a %s."
+- **7-10 nouns per theme** - dairy farmer, merge conflict, infinite loop...
+
+Insults and comebacks are always drawn from the same theme, keeping pairs coherent. The combinatorics produce thousands of unique exchanges.
+
+## Deployment
+
+### Fly.io
+
+The project includes a `fly.toml` and a GitHub Actions workflow that deploys on push to `main`/`master`. Set the `FLY_API_TOKEN` secret in your GitHub repository settings.
+
+### Docker
+
+```bash
+docker build -t monkeylines .
+docker run -p 8080:8080 monkeylines
+```
 
 ## Architecture
 

@@ -45,8 +45,10 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	baseURL := scheme(r) + "://" + r.Host
+
 	var buf bytes.Buffer
-	if err := tmpl.Execute(&buf, nil); err != nil {
+	if err := tmpl.Execute(&buf, baseURL); err != nil {
 		log.Printf("Error rendering template: %v", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
