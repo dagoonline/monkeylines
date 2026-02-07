@@ -18,6 +18,25 @@
     <meta name="description" content="Insult sword fighting with a three-headed monkey. Inspired by The Secret of Monkey Island.">
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
     <style>
+        @font-face {
+            font-family: 'Press Start 2P';
+            src: url('/images/fonts/PressStart2P-Regular.woff2') format('woff2');
+            font-display: swap;
+        }
+
+        :root {
+            --mi-bg-dark: #1a0a2e;
+            --mi-bg-mid: #2d1b4e;
+            --mi-teal: #2d8b6e;
+            --mi-teal-light: #3aaf8a;
+            --mi-amber: #c8a43c;
+            --mi-amber-light: #e8c84c;
+            --mi-cream: #e8d4a0;
+            --mi-text: #e8d4a0;
+            --mi-text-dark: #1a0a2e;
+            --mi-border: #4a2d6e;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -25,7 +44,10 @@
         }
 
         body {
-            font-family: monospace;
+            font-family: 'Press Start 2P', monospace;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: unset;
+            text-rendering: optimizeSpeed;
             background: #2a2a2a;
             min-height: 100dvh;
             display: flex;
