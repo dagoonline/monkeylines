@@ -13,7 +13,9 @@ MonkeyLines is a fun service that generates procedurally created insults and com
 
 - **Web Interface** - Animated pixel-art three-headed monkey with typewriter speech bubble effect
 - **Insult Sword Fighting** - Side monkeys throw insults, center monkey delivers themed comebacks
-- **Auto-play Mode** - Toggle continuous exchanges with the 🙊 button
+- **Auto-play Mode** - Toggle continuous exchanges with the 🔁 button
+- **Monkey Voices** - Per-word hooting sounds via Web Audio API, with per-monkey pitch
+- **Mute Toggle** - 🔈/🔇 button to silence audio
 - **Plain Text API** - `GET /line` returns just the text, perfect for scripting
 - **Exchange API** - `GET /exchange` returns a paired insult/comeback as JSON
 - **Themed Generator** - 8 themes with thousands of unique insult/comeback combinations
@@ -55,7 +57,7 @@ Open your browser and navigate to:
 http://localhost:8080
 ```
 
-Features an animated three-headed monkey from Monkey Island. Press ⚔️ to trigger an insult sword fight — a side monkey delivers the insult, then the center monkey fires back with a themed comeback. Press 🙊 to enable auto-play mode for continuous exchanges.
+Features an animated three-headed monkey from Monkey Island. Press ⚔️ to trigger an insult sword fight — a side monkey delivers the insult, then the center monkey fires back with a themed comeback. Press 🔁 to enable auto-play mode for continuous exchanges. Press 🔈 to mute/unmute the monkey hooting sounds.
 
 ### Plain Text API
 

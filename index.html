@@ -134,12 +134,7 @@
             }
 
             .btn-row {
-                position: absolute;
-                bottom: 12%;
-                left: 0;
-                right: 0;
-                margin: 0;
-                z-index: 10;
+                margin: 12px auto 0;
             }
         }
     </style>
@@ -155,7 +150,8 @@
         </div>
         <div class="btn-row">
             <button class="dialogue-btn" id="reload-btn">⚔️</button>
-            <button class="dialogue-btn" id="auto-btn">🙊</button>
+            <button class="dialogue-btn" id="auto-btn">🔁</button>
+            <button class="dialogue-btn" id="mute-btn">🔈</button>
         </div>
         <a class="footer-link" href="https://github.com/dagoonline/monkeylines" target="_blank" aria-label="github.com/dagoonline/monkeylines"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.3-3.2-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6.2 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.7.2 2.9.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.7-2.8 5.7-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg></a>
     </div>
@@ -165,6 +161,7 @@
             var el = document.getElementById('speech-text');
             var btn = document.getElementById('reload-btn');
             var autoBtn = document.getElementById('auto-btn');
+            var muteBtn = document.getElementById('mute-btn');
             var overlays = {
                 l: document.getElementById('monkey-l'),
                 c: document.getElementById('monkey-c'),
@@ -172,51 +169,65 @@
             };
             var allMonkeys = ['l', 'c', 'r'];
             var sideMonkeys = ['l', 'r'];
-            var swapTimer = null;
             var busy = false;
             var autoPlay = false;
+            var muted = false;
             var audioCtx = null;
             var monkeyVoices = {
-                l: { base: 180, range: 90 },
-                c: { base: 150, range: 80 },
-                r: { base: 220, range: 100 }
+                l: { low: 200, high: 360 },
+                c: { low: 140, high: 240 },
+                r: { low: 260, high: 440 }
             };
 
-            function charToFreq(ch, voice) {
-                var code = ch.toLowerCase().charCodeAt(0);
-                var t = ((code - 97) % 26) / 25;
-                return voice.base + t * voice.range;
-            }
-
-            function playCharSound(monkey, ch) {
-                if (!ch || ch === ' ') return;
-                var code = ch.charCodeAt(0);
-                if (code < 65 || (code > 90 && code < 97) || code > 122) return;
-                if (!audioCtx) {
-                    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { return; }
-                }
-                var voice = monkeyVoices[monkey];
+            function playHoot(freq, duration) {
+                if (!audioCtx || muted) return;
                 var now = audioCtx.currentTime;
-                var freq = charToFreq(ch, voice);
-
+                var fade = Math.min(0.05, duration * 0.25);
                 var osc = audioCtx.createOscillator();
                 var gain = audioCtx.createGain();
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(freq, now);
-                osc.frequency.exponentialRampToValueAtTime(freq * 0.85, now + 0.07);
-                gain.gain.setValueAtTime(0.07, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                osc.type = 'triangle';
+                var jitter = 0.95 + Math.random() * 0.1;
+                var f = freq * jitter;
+                osc.frequency.setValueAtTime(f * 1.08, now);
+                osc.frequency.linearRampToValueAtTime(f, now + duration * 0.3);
+                osc.frequency.linearRampToValueAtTime(f * (0.85 + Math.random() * 0.15), now + duration);
+                gain.gain.setValueAtTime(0.001, now);
+                gain.gain.linearRampToValueAtTime(0.07 + Math.random() * 0.03, now + fade);
+                gain.gain.linearRampToValueAtTime(0.06, now + duration - fade);
+                gain.gain.linearRampToValueAtTime(0.001, now + duration);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start(now);
-                osc.stop(now + 0.08);
+                osc.stop(now + duration + 0.01);
             }
 
-            function randomInterval() {
-                return 100 + Math.random() * 100;
+            function hootWord(monkey, charCount) {
+                var voice = monkeyVoices[monkey];
+                var wordDur = charCount * 0.04;
+                var r = Math.random();
+                if (charCount <= 2) {
+                    playHoot(voice.high * (0.85 + Math.random() * 0.3), wordDur);
+                } else if (r < 0.35) {
+                    playHoot(voice.low + Math.random() * (voice.high - voice.low), wordDur * 0.9);
+                } else if (r < 0.65) {
+                    playHoot(voice.high * (0.9 + Math.random() * 0.2), wordDur * 0.9);
+                } else {
+                    var n = Math.min(charCount, 2 + Math.floor(Math.random() * 3));
+                    var gap = wordDur / n;
+                    for (var k = 0; k < n; k++) {
+                        (function(idx) {
+                            setTimeout(function() {
+                                playHoot(
+                                    (Math.random() < 0.5 ? voice.low : voice.high) * (0.95 + Math.random() * 0.1),
+                                    gap * 0.9
+                                );
+                            }, idx * gap * 1000);
+                        })(k);
+                    }
+                }
             }
 
-            function showOverlay(monkey) {
+function showOverlay(monkey) {
                 allMonkeys.forEach(function(m) {
                     overlays[m].classList.remove('monkey-visible');
                 });
@@ -249,24 +260,32 @@
                     el.appendChild(hidden);
                     fitText();
                     showOverlay(null);
-                    var i = 0;
-
-                    function toggleMouth() {
-                        overlays[monkey].classList.toggle('monkey-visible');
-                        swapTimer = setTimeout(toggleMouth, randomInterval());
+                    if (!audioCtx) {
+                        try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
                     }
-                    toggleMouth();
+                    var i = 0;
+                    var inWord = false;
 
                     function step() {
                         if (i < text.length) {
-                            playCharSound(monkey, text[i]);
+                            var ch = text[i];
                             visible.textContent = text.substring(0, i + 1);
                             hidden.textContent = text.substring(i + 1);
+
+                            if (ch !== ' ' && !inWord) {
+                                inWord = true;
+                                var end = i + 1;
+                                while (end < text.length && text[end] !== ' ') end++;
+                                overlays[monkey].classList.add('monkey-visible');
+                                hootWord(monkey, end - i);
+                            } else if (ch === ' ') {
+                                inWord = false;
+                                overlays[monkey].classList.remove('monkey-visible');
+                            }
+
                             i++;
                             setTimeout(step, 40);
                         } else {
-                            clearTimeout(swapTimer);
-                            swapTimer = null;
                             showOverlay(monkey);
                             resolve();
                         }
@@ -331,6 +350,12 @@
                 } else {
                     if (!busy) btn.disabled = false;
                 }
+            });
+
+            muteBtn.addEventListener('click', function() {
+                muted = !muted;
+                muteBtn.classList.toggle('active', muted);
+                muteBtn.textContent = muted ? '🔇' : '🔈';
             });
 
         })();
