@@ -6,7 +6,7 @@ Transform MonkeyLines from a functional prototype into a visually authentic Monk
 
 ## Phases
 
-- [ ] **Phase 1: Visual Foundation** - Establish MI color palette, pixel font, and base theme
+- [x] **Phase 1: Visual Foundation** - Establish MI color palette, pixel font, and base theme
 - [ ] **Phase 2: Control Panel** - Restyle buttons as SCUMM verb bar with pixel art icons
 - [ ] **Phase 3: Scene and Speech** - Frame the monkey viewport and restyle speech bubbles
 - [ ] **Phase 4: Polish** - CRT scanline overlay for retro finishing touch
@@ -24,7 +24,7 @@ Transform MonkeyLines from a functional prototype into a visually authentic Monk
 **Plans**: 1 plan
 
 Plans:
-- [ ] 01-01-PLAN.md — MI color palette, pixel font, and base theme applied to all elements
+- [x] 01-01-PLAN.md — MI color palette, pixel font, and base theme applied to all elements
 
 ### Phase 2: Control Panel
 **Goal**: Users interact with buttons that look like SCUMM verb bar controls — recognizable, themed, and intuitive on both desktop and mobile
@@ -72,7 +72,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Visual Foundation | 0/1 | Planned | - |
+| 1. Visual Foundation | 1/1 | Complete | 2026-02-07 |
 | 2. Control Panel | 0/? | Not started | - |
 | 3. Scene and Speech | 0/? | Not started | - |
 | 4. Polish | 0/? | Not started | - |
