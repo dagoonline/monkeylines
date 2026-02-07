@@ -175,6 +175,42 @@
             var swapTimer = null;
             var busy = false;
             var autoPlay = false;
+            var audioCtx = null;
+            var monkeyVoices = {
+                l: { base: 180, range: 90 },
+                c: { base: 150, range: 80 },
+                r: { base: 220, range: 100 }
+            };
+
+            function charToFreq(ch, voice) {
+                var code = ch.toLowerCase().charCodeAt(0);
+                var t = ((code - 97) % 26) / 25;
+                return voice.base + t * voice.range;
+            }
+
+            function playCharSound(monkey, ch) {
+                if (!ch || ch === ' ') return;
+                var code = ch.charCodeAt(0);
+                if (code < 65 || (code > 90 && code < 97) || code > 122) return;
+                if (!audioCtx) {
+                    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { return; }
+                }
+                var voice = monkeyVoices[monkey];
+                var now = audioCtx.currentTime;
+                var freq = charToFreq(ch, voice);
+
+                var osc = audioCtx.createOscillator();
+                var gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(freq, now);
+                osc.frequency.exponentialRampToValueAtTime(freq * 0.85, now + 0.07);
+                gain.gain.setValueAtTime(0.07, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.08);
+            }
 
             function randomInterval() {
                 return 100 + Math.random() * 100;
@@ -223,6 +259,7 @@
 
                     function step() {
                         if (i < text.length) {
+                            playCharSound(monkey, text[i]);
                             visible.textContent = text.substring(0, i + 1);
                             hidden.textContent = text.substring(i + 1);
                             i++;
