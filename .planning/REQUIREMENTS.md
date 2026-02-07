@@ -73,25 +73,25 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| VFND-01 | TBD | Pending |
-| VFND-02 | TBD | Pending |
-| VFND-03 | TBD | Pending |
-| VFND-04 | TBD | Pending |
-| CTRL-01 | TBD | Pending |
-| CTRL-02 | TBD | Pending |
-| CTRL-03 | TBD | Pending |
-| CTRL-04 | TBD | Pending |
-| SCNE-01 | TBD | Pending |
-| SCNE-02 | TBD | Pending |
-| SCNE-03 | TBD | Pending |
-| SCNE-04 | TBD | Pending |
-| PLSH-01 | TBD | Pending |
+| VFND-01 | Phase 1 | Pending |
+| VFND-02 | Phase 1 | Pending |
+| VFND-03 | Phase 1 | Pending |
+| VFND-04 | Phase 1 | Pending |
+| CTRL-01 | Phase 2 | Pending |
+| CTRL-02 | Phase 2 | Pending |
+| CTRL-03 | Phase 2 | Pending |
+| CTRL-04 | Phase 2 | Pending |
+| SCNE-01 | Phase 3 | Pending |
+| SCNE-02 | Phase 3 | Pending |
+| SCNE-03 | Phase 3 | Pending |
+| SCNE-04 | Phase 3 | Pending |
+| PLSH-01 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 13 total
-- Mapped to phases: 0 (awaiting roadmap)
-- Unmapped: 13 ⚠️
+- Mapped to phases: 13
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-07*
-*Last updated: 2026-02-07 after initial definition*
+*Last updated: 2026-02-07 after roadmap creation*
