@@ -203,9 +203,7 @@
                             .then(function() { showOverlay(null); return delay(2000); })
                             .then(function() { return typeText(data.Comeback, 'c'); });
                     })
-                    .then(function() { showOverlay(null); return delay(2000); })
                     .then(function() {
-                        el.textContent = '';
                         showOverlay(null);
                         busy = false;
                         btn.disabled = false;
