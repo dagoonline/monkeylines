@@ -79,17 +79,17 @@
         .btn-row {
             display: flex;
             justify-content: center;
-            gap: 16px;
+            gap: clamp(8px, 3vw, 16px);
             margin: 20px auto 0;
         }
 
         .dialogue-btn {
-            font-size: 2.5em;
+            font-size: clamp(1.5em, 6vw, 2.5em);
             background: #1a1a1a;
             border: 3px solid #333;
             border-radius: 16px;
             cursor: pointer;
-            padding: 14px 32px;
+            padding: clamp(8px, 2vw, 14px) clamp(16px, 5vw, 32px);
             box-shadow: 0 6px 0 #0a0a0a, 0 8px 20px rgba(0, 0, 0, 0.5);
         }
 
@@ -173,6 +173,15 @@
             var autoPlay = false;
             var muted = false;
             var audioCtx = null;
+
+            function ensureAudio() {
+                if (!audioCtx) {
+                    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+                }
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+            }
             var monkeyVoices = {
                 l: { low: 200, high: 360 },
                 c: { low: 140, high: 240 },
@@ -260,9 +269,6 @@ function showOverlay(monkey) {
                     el.appendChild(hidden);
                     fitText();
                     showOverlay(null);
-                    if (!audioCtx) {
-                        try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
-                    }
                     var i = 0;
                     var inWord = false;
 
@@ -338,10 +344,12 @@ function showOverlay(monkey) {
 
             btn.addEventListener('click', function() {
                 if (busy) return;
+                ensureAudio();
                 runExchange();
             });
 
             autoBtn.addEventListener('click', function() {
+                ensureAudio();
                 autoPlay = !autoPlay;
                 autoBtn.classList.toggle('active', autoPlay);
                 if (autoPlay) {
