@@ -21,10 +21,10 @@ Transform MonkeyLines from a functional prototype into a visually authentic Monk
   1. Page background, text, and containers use deep purples/teals/ambers from the MI palette — no default browser colors remain
   2. All text renders in a pixel font with crisp edges (no antialiasing smoothing visible)
   3. All pixel art elements scale without blurring at any viewport size
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 01-01: TBD
+- [ ] 01-01-PLAN.md — MI color palette, pixel font, and base theme applied to all elements
 
 ### Phase 2: Control Panel
 **Goal**: Users interact with buttons that look like SCUMM verb bar controls — recognizable, themed, and intuitive on both desktop and mobile
@@ -72,7 +72,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Visual Foundation | 0/? | Not started | - |
+| 1. Visual Foundation | 0/1 | Planned | - |
 | 2. Control Panel | 0/? | Not started | - |
 | 3. Scene and Speech | 0/? | Not started | - |
 | 4. Polish | 0/? | Not started | - |
