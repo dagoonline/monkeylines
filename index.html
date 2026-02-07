@@ -14,7 +14,7 @@
 
         body {
             font-family: monospace;
-            background: #2b2320;
+            background: #2a2a2a;
             min-height: 100dvh;
             display: flex;
             align-items: center;
@@ -31,7 +31,7 @@
             position: relative;
             width: 100%;
             aspect-ratio: 1 / 1;
-            background: #2b2320;
+            background: #2a2a2a;
         }
 
         .monkey-scene img {
@@ -73,20 +73,13 @@
         .dialogue-btn {
             display: block;
             margin: 20px auto 0;
-            font-size: 2em;
-            background: #2a2a2a;
-            border: 3px solid #555;
-            border-radius: 12px;
+            font-size: 2.5em;
+            background: #1a1a1a;
+            border: 3px solid #333;
+            border-radius: 16px;
             cursor: pointer;
-            padding: 10px 24px;
-            box-shadow: 0 4px 0 #111, 0 6px 12px rgba(0, 0, 0, 0.4);
-            transition: transform 0.1s, box-shadow 0.1s;
-        }
-
-        .dialogue-btn:hover {
-            background: #333;
-            border-color: #777;
-            box-shadow: 0 4px 0 #111, 0 6px 16px rgba(0, 0, 0, 0.5);
+            padding: 14px 32px;
+            box-shadow: 0 6px 0 #0a0a0a, 0 8px 20px rgba(0, 0, 0, 0.5);
         }
 
         .footer-link {
@@ -106,12 +99,13 @@
         }
 
         .dialogue-btn:active:not(:disabled) {
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #111, 0 2px 4px rgba(0, 0, 0, 0.4);
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #1a4a3a, 0 3px 6px rgba(0, 0, 0, 0.4);
         }
 
         .dialogue-btn:disabled {
-            visibility: hidden;
+            opacity: 0.3;
+            cursor: default;
         }
     </style>
 </head>
