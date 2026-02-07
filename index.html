@@ -176,11 +176,17 @@
 
             function ensureAudio() {
                 if (!audioCtx) {
-                    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+                    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { return; }
                 }
-                if (audioCtx && audioCtx.state === 'suspended') {
+                if (audioCtx.state === 'suspended') {
                     audioCtx.resume();
                 }
+                // Play a silent buffer to unlock audio on iOS/Android
+                var buf = audioCtx.createBuffer(1, 1, audioCtx.sampleRate);
+                var src = audioCtx.createBufferSource();
+                src.buffer = buf;
+                src.connect(audioCtx.destination);
+                src.start(0);
             }
             var monkeyVoices = {
                 l: { low: 200, high: 360 },
@@ -189,7 +195,7 @@
             };
 
             function playHoot(freq, duration) {
-                if (!audioCtx || muted) return;
+                if (!audioCtx || muted || audioCtx.state !== 'running') return;
                 var now = audioCtx.currentTime;
                 var fade = Math.min(0.05, duration * 0.25);
                 var osc = audioCtx.createOscillator();
@@ -361,6 +367,7 @@ function showOverlay(monkey) {
             });
 
             muteBtn.addEventListener('click', function() {
+                ensureAudio();
                 muted = !muted;
                 muteBtn.classList.toggle('active', muted);
                 muteBtn.textContent = muted ? '🔇' : '🔈';
