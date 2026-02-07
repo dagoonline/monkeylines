@@ -14,8 +14,8 @@
 
         body {
             font-family: monospace;
-            background: #181818;
-            min-height: 100vh;
+            background: #2b2320;
+            min-height: 100dvh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -31,7 +31,7 @@
             position: relative;
             width: 100%;
             aspect-ratio: 1 / 1;
-            background: #181818;
+            background: #2b2320;
         }
 
         .monkey-scene img {
@@ -73,37 +73,26 @@
         .dialogue-btn {
             display: block;
             margin: 20px auto 0;
-            font-family: monospace;
-            font-size: 1.3em;
-            color: #f5e6c8;
-            background: linear-gradient(180deg, #5c3a1e 0%, #3b2210 100%);
-            border: 3px solid #8b5e3c;
-            border-radius: 6px;
+            font-size: 2em;
+            background: #2a2a2a;
+            border: 3px solid #555;
+            border-radius: 12px;
             cursor: pointer;
-            padding: 12px 30px;
-            text-shadow: 1px 1px 2px #000;
-            text-decoration: none;
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.15),
-                0 3px 6px rgba(0, 0, 0, 0.5);
-            transition: all 0.15s;
+            padding: 10px 24px;
+            box-shadow: 0 4px 0 #111, 0 6px 12px rgba(0, 0, 0, 0.4);
+            transition: transform 0.1s, box-shadow 0.1s;
         }
 
         .dialogue-btn:hover {
-            background: linear-gradient(180deg, #7a4e2a 0%, #5c3a1e 100%);
-            border-color: #c4884a;
-            color: #ffe4a8;
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                0 3px 8px rgba(0, 0, 0, 0.6),
-                0 0 12px rgba(196, 136, 74, 0.3);
+            background: #333;
+            border-color: #777;
+            box-shadow: 0 4px 0 #111, 0 6px 16px rgba(0, 0, 0, 0.5);
         }
 
         .footer-link {
             position: fixed;
             bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
+            right: 15px;
             opacity: 0.4;
             transition: opacity 0.15s;
         }
@@ -116,12 +105,13 @@
             display: block;
         }
 
-        .dialogue-btn:active {
-            background: linear-gradient(180deg, #3b2210 0%, #2a1808 100%);
-            box-shadow:
-                inset 0 2px 4px rgba(0, 0, 0, 0.4),
-                0 1px 2px rgba(0, 0, 0, 0.5);
-            transform: translateY(1px);
+        .dialogue-btn:active:not(:disabled) {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #111, 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .dialogue-btn:disabled {
+            visibility: hidden;
         }
     </style>
 </head>
@@ -132,9 +122,9 @@
             <img class="monkey-overlay" id="monkey-l" src="/images/l.png" alt="">
             <img class="monkey-overlay" id="monkey-c" src="/images/c.png" alt="">
             <img class="monkey-overlay" id="monkey-r" src="/images/r.png" alt="">
-            <div class="speech-text" id="speech-text" data-insult="{{.Insult}}" data-monkey="{{.Monkey}}"></div>
+            <div class="speech-text" id="speech-text"></div>
         </div>
-        <button class="dialogue-btn" id="reload-btn">Draw your sword again...</button>
+        <button class="dialogue-btn" id="reload-btn">⚔️</button>
         <a class="footer-link" href="https://github.com/dagoonline/monkeylines" target="_blank" aria-label="github.com/dagoonline/monkeylines"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.3-3.2-.1-.3-.6-1.5.1-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6.2 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.7.2 2.9.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.7-2.8 5.7-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg></a>
     </div>
 
@@ -201,28 +191,24 @@
                 return new Promise(function(resolve) { setTimeout(resolve, ms); });
             }
 
-            function runExchange(insultText, firstMonkey) {
+            function runExchange() {
                 busy = true;
-                var monkeyA = firstMonkey || pickSideMonkey();
+                btn.disabled = true;
+                var monkeyA = pickSideMonkey();
 
-                var insultPromise = insultText
-                    ? Promise.resolve(insultText)
-                    : fetch('/insult').then(function(r) { return r.text(); }).then(function(t) { return t.trim(); });
-
-                insultPromise
-                    .then(function(insult) { return typeText(insult, monkeyA); })
-                    .then(function() { return delay(2000); })
-                    .then(function() {
-                        return fetch('/comeback').then(function(r) { return r.text(); }).then(function(t) { return t.trim(); });
+                fetch('/exchange')
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        return typeText(data.Insult, monkeyA)
+                            .then(function() { showOverlay(null); return delay(2000); })
+                            .then(function() { return typeText(data.Comeback, 'c'); });
                     })
-                    .then(function(comeback) {
-                        return typeText(comeback, 'c');
-                    })
-                    .then(function() { return delay(2000); })
+                    .then(function() { showOverlay(null); return delay(2000); })
                     .then(function() {
                         el.textContent = '';
                         showOverlay(null);
                         busy = false;
+                        btn.disabled = false;
                     });
             }
 
@@ -231,7 +217,6 @@
                 runExchange();
             });
 
-            runExchange(el.getAttribute('data-insult'), el.getAttribute('data-monkey'));
         })();
     </script>
 </body>

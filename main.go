@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"embed"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -24,11 +25,11 @@ var imagesFS embed.FS
 
 var tmpl *template.Template
 
-func handleInsult(w http.ResponseWriter, r *http.Request) {
-	message := generateInsult()
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	fmt.Fprintln(w, message)
-	log.Printf("HTTP %s %s://%s%s from %s - Served insult: %s", r.Method, scheme(r), r.Host, r.URL.Path, clientIP(r), message)
+func handleExchange(w http.ResponseWriter, r *http.Request) {
+	ex := generateExchange()
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	json.NewEncoder(w).Encode(ex)
+	log.Printf("HTTP %s %s://%s%s from %s - Served exchange: %s / %s", r.Method, scheme(r), r.Host, r.URL.Path, clientIP(r), ex.Insult, ex.Comeback)
 }
 
 func handlePlain(w http.ResponseWriter, r *http.Request) {
@@ -38,29 +39,14 @@ func handlePlain(w http.ResponseWriter, r *http.Request) {
 	log.Printf("HTTP %s %s://%s%s from %s - Served: %s", r.Method, scheme(r), r.Host, r.URL.Path, clientIP(r), message)
 }
 
-func handleComeback(w http.ResponseWriter, r *http.Request) {
-	message := generateComeback()
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	fmt.Fprintln(w, message)
-	log.Printf("HTTP %s %s://%s%s from %s - Served comeback: %s", r.Method, scheme(r), r.Host, r.URL.Path, clientIP(r), message)
-}
-
 func handleHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
 	}
 
-	insult := generateInsult()
-	monkey := randomSideMonkey()
-
-	data := struct {
-		Insult string
-		Monkey string
-	}{Insult: insult, Monkey: monkey}
-
 	var buf bytes.Buffer
-	if err := tmpl.Execute(&buf, data); err != nil {
+	if err := tmpl.Execute(&buf, nil); err != nil {
 		log.Printf("Error rendering template: %v", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
@@ -69,7 +55,7 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	buf.WriteTo(w)
 
-	log.Printf("HTTP %s %s://%s%s from %s - Served insult (%s): %s", r.Method, scheme(r), r.Host, r.URL.Path, clientIP(r), monkey, insult)
+	log.Printf("HTTP %s %s://%s%s from %s - Served page", r.Method, scheme(r), r.Host, r.URL.Path, clientIP(r))
 }
 
 func clientIP(r *http.Request) string {
@@ -136,8 +122,7 @@ func main() {
 		imageServer.ServeHTTP(w, r)
 	})
 	mux.HandleFunc("/line", handlePlain)
-	mux.HandleFunc("/insult", handleInsult)
-	mux.HandleFunc("/comeback", handleComeback)
+	mux.HandleFunc("/exchange", handleExchange)
 	mux.HandleFunc("/", handleHTTP)
 
 	httpServer := &http.Server{
