@@ -123,6 +123,25 @@
             border-color: #4a9a4a;
             box-shadow: 0 6px 0 #0a0a0a, 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 12px rgba(74, 154, 74, 0.4);
         }
+
+        @media (max-aspect-ratio: 1/1) {
+            body {
+                padding: 0;
+            }
+
+            .container {
+                max-width: none;
+            }
+
+            .btn-row {
+                position: absolute;
+                bottom: 12%;
+                left: 0;
+                right: 0;
+                margin: 0;
+                z-index: 10;
+            }
+        }
     </style>
 </head>
 <body>
@@ -174,6 +193,15 @@
                 return sideMonkeys[Math.floor(Math.random() * sideMonkeys.length)];
             }
 
+            function fitText() {
+                el.style.fontSize = '';
+                var size = parseFloat(getComputedStyle(el).fontSize);
+                while (el.scrollHeight > el.clientHeight && size > 8) {
+                    size -= 0.5;
+                    el.style.fontSize = size + 'px';
+                }
+            }
+
             function typeText(text, monkey) {
                 return new Promise(function(resolve) {
                     var visible = document.createElement('span');
@@ -183,6 +211,7 @@
                     el.textContent = '';
                     el.appendChild(visible);
                     el.appendChild(hidden);
+                    fitText();
                     showOverlay(null);
                     var i = 0;
 
