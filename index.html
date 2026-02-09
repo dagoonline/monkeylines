@@ -106,7 +106,7 @@
             height: 13%;
             padding: 6px 10px;
             font-family: 'Press Start 2P', monospace;
-            font-size: clamp(10px, 2vw, 20px);
+            font-size: clamp(6px, 2vw, 20px);
             color: var(--mi-text);
             line-height: 1.2;
             text-align: left;
@@ -343,7 +343,7 @@ function showOverlay(monkey) {
             function fitText() {
                 el.style.fontSize = '';
                 var size = parseFloat(getComputedStyle(el).fontSize);
-                while (el.scrollHeight > el.clientHeight && size > 8) {
+                while (el.scrollHeight > el.clientHeight && size > 6) {
                     size -= 0.5;
                     el.style.fontSize = size + 'px';
                 }
