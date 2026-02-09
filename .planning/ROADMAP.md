@@ -63,7 +63,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 04-01-PLAN.md — CRT scanline overlay via CSS pseudo-element with accessibility support
+- [x] 04-01-PLAN.md — CRT scanline overlay via CSS pseudo-element with accessibility support
 
 ## Progress
 
@@ -75,4 +75,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Visual Foundation | 1/1 | Complete | 2026-02-07 |
 | 2. Control Panel | 1/1 | Complete | 2026-02-09 |
 | 3. Scene and Speech | 1/1 | Complete | 2026-02-09 |
-| 4. Polish | 0/1 | Not started | - |
+| 4. Polish | 1/1 | Complete | 2026-02-09 |
