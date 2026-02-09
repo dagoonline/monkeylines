@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-07)
 
 **Core value:** Immediate clarity, nostalgic recognition, and delight — no confusion, just charm
-**Current focus:** Phase 2: Control Panel
+**Current focus:** Phase 3: Scene and Speech
 
 ## Current Position
 
-Phase: 2 of 4 (Control Panel)
+Phase: 3 of 4 (Scene and Speech)
 Plan: 1 of 1 in current phase
 Status: Phase complete
-Last activity: 2026-02-09 — Completed 02-01-PLAN.md
+Last activity: 2026-02-09 — Completed 03-01-PLAN.md
 
-Progress: [█████░░░░░] 50% of milestone (2/4 phases)
+Progress: [███████░░░] 75% of milestone (3/4 phases)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: ~15min
-- Total execution time: ~30min
+- Total plans completed: 3
+- Average duration: ~10min
+- Total execution time: ~32min
 
 **By Phase:**
 
@@ -29,9 +29,10 @@ Progress: [█████░░░░░] 50% of milestone (2/4 phases)
 |-------|-------|-------|----------|
 | 01-visual-foundation | 1 | ~15min | ~15min |
 | 02-control-panel | 1 | ~15min | ~15min |
+| 03-scene-and-speech | 1 | ~2min | ~2min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (~15min), 02-01 (~15min)
+- Last 5 plans: 01-01 (~15min), 02-01 (~15min), 03-01 (~2min)
 
 *Updated after each plan completion*
 
@@ -46,6 +47,8 @@ Recent decisions affecting current work:
 - CSS custom properties on :root for MI palette reuse (var(--mi-*))
 - Anti-aliasing disabled globally for pixel aesthetic
 - Hybrid verb bar: text labels for Fight/Auto, speaker icon for mute (smaller, right-aligned)
+- Inline base64 data URIs for pixel-art border PNGs (no extra asset files)
+- data-speaker attribute pattern for per-monkey CSS styling
 
 ### Pending Todos
 
@@ -57,6 +60,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-09T12:00:00Z
-Stopped at: Completed 02-01-PLAN.md (Phase 2 complete)
+Last session: 2026-02-09T12:23:15Z
+Stopped at: Completed 03-01-PLAN.md (Phase 3 complete)
 Resume file: None
