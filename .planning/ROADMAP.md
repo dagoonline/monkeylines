@@ -8,7 +8,7 @@ Transform MonkeyLines from a functional prototype into a visually authentic Monk
 
 - [x] **Phase 1: Visual Foundation** - Establish MI color palette, pixel font, and base theme
 - [x] **Phase 2: Control Panel** - Restyle buttons as SCUMM verb bar with pixel art icons
-- [ ] **Phase 3: Scene and Speech** - Frame the monkey viewport and restyle speech bubbles
+- [x] **Phase 3: Scene and Speech** - Frame the monkey viewport and restyle speech bubbles
 - [ ] **Phase 4: Polish** - CRT scanline overlay for retro finishing touch
 
 ## Phase Details
@@ -51,7 +51,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 03-01-PLAN.md — Scene frame, per-speaker text colors, and speech bubble 9-slice restyle
+- [x] 03-01-PLAN.md — Scene frame with pixel-art border, per-speaker text colors on existing bubble
 
 ### Phase 4: Polish
 **Goal**: Subtle retro effects add finishing authenticity without hurting usability
@@ -74,5 +74,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Visual Foundation | 1/1 | Complete | 2026-02-07 |
 | 2. Control Panel | 1/1 | Complete | 2026-02-09 |
-| 3. Scene and Speech | 0/1 | Not started | - |
+| 3. Scene and Speech | 1/1 | Complete | 2026-02-09 |
 | 4. Polish | 0/? | Not started | - |

@@ -23,10 +23,10 @@ Requirements for Monkey Island-styled UI revamp. Each maps to roadmap phases.
 
 ### Scene Presentation
 
-- [ ] **SCNE-01**: Scene frame/border added around monkey viewport (pixel art or CSS in MI palette)
-- [ ] **SCNE-02**: Speaker-colored speech text (different color per monkey head: left, center, right)
-- [ ] **SCNE-03**: 9-slice border-image panels for authentic SCUMM-style scalable borders
-- [ ] **SCNE-04**: Speech bubble restyled with pixel aesthetic (preserves fitText() functionality)
+- [x] **SCNE-01**: Scene frame/border added around monkey viewport (pixel art or CSS in MI palette)
+- [x] **SCNE-02**: Speaker-colored speech text (different color per monkey head: left, center, right)
+- [x] **SCNE-03**: 9-slice border-image panels for authentic SCUMM-style scalable borders - Applied to scene frame
+- [x] **SCNE-04**: Speech bubble restyled with pixel aesthetic (preserves fitText() functionality) - Used existing background bubble with per-speaker colors
 
 ### Polish
 
@@ -81,10 +81,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CTRL-02 | Phase 2 | Complete |
 | CTRL-03 | Phase 2 | Complete |
 | CTRL-04 | Phase 2 | Complete |
-| SCNE-01 | Phase 3 | Pending |
-| SCNE-02 | Phase 3 | Pending |
-| SCNE-03 | Phase 3 | Pending |
-| SCNE-04 | Phase 3 | Pending |
+| SCNE-01 | Phase 3 | Complete |
+| SCNE-02 | Phase 3 | Complete |
+| SCNE-03 | Phase 3 | Complete |
+| SCNE-04 | Phase 3 | Complete |
 | PLSH-01 | Phase 4 | Pending |
 
 **Coverage:**
@@ -94,4 +94,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-07*
-*Last updated: 2026-02-09 after Phase 2 completion*
+*Last updated: 2026-02-09 after Phase 3 completion*
