@@ -60,10 +60,10 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. A CRT scanline effect is visible on desktop but does not reduce text readability
   2. The overlay performs smoothly on mobile (no jank or dropped frames)
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 04-01: TBD
+- [ ] 04-01-PLAN.md — CRT scanline overlay via CSS pseudo-element with accessibility support
 
 ## Progress
 
@@ -75,4 +75,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Visual Foundation | 1/1 | Complete | 2026-02-07 |
 | 2. Control Panel | 1/1 | Complete | 2026-02-09 |
 | 3. Scene and Speech | 1/1 | Complete | 2026-02-09 |
-| 4. Polish | 0/? | Not started | - |
+| 4. Polish | 0/1 | Not started | - |
