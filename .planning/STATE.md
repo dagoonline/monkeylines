@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-02-07)
 Phase: 3 of 4 (Scene and Speech)
 Plan: 1 of 1 in current phase
 Status: Phase complete
-Last activity: 2026-02-09 — Completed 03-01-PLAN.md
+Last activity: 2026-02-09 — Fixed speech bubble (03-01 hotfix)
 
 Progress: [███████░░░] 75% of milestone (3/4 phases)
 
@@ -49,6 +49,7 @@ Recent decisions affecting current work:
 - Hybrid verb bar: text labels for Fight/Auto, speaker icon for mute (smaller, right-aligned)
 - Inline base64 data URIs for pixel-art border PNGs (no extra asset files)
 - data-speaker attribute pattern for per-monkey CSS styling
+- Use background image speech bubble instead of CSS border-image overlay
 
 ### Pending Todos
 
