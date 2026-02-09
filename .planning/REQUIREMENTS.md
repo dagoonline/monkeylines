@@ -9,17 +9,17 @@ Requirements for Monkey Island-styled UI revamp. Each maps to roadmap phases.
 
 ### Visual Foundation
 
-- [ ] **VFND-01**: Monkey Island color palette defined as CSS custom properties (deep purples, teals, ambers, cream)
-- [ ] **VFND-02**: Press Start 2P pixel font loaded (self-hosted WOFF2, antialiasing disabled)
-- [ ] **VFND-03**: Consistent `image-rendering: pixelated` applied to all pixel art elements
-- [ ] **VFND-04**: Base theme colors applied to body and container elements
+- [x] **VFND-01**: Monkey Island color palette defined as CSS custom properties (deep purples, teals, ambers, cream)
+- [x] **VFND-02**: Press Start 2P pixel font loaded (self-hosted WOFF2, antialiasing disabled)
+- [x] **VFND-03**: Consistent `image-rendering: pixelated` applied to all pixel art elements
+- [x] **VFND-04**: Base theme colors applied to body and container elements
 
 ### Button Controls
 
-- [ ] **CTRL-01**: Button touch targets meet 44x44px minimum for mobile compatibility
-- [ ] **CTRL-02**: Verb bar panel styling (dark background strip, SCUMM two-zone layout below scene)
-- [ ] **CTRL-03**: Pixel art button icons created (16x16 or 32x32 sprites in MI palette)
-- [ ] **CTRL-04**: Pixel art icons replace emoji buttons for all three controls
+- [x] **CTRL-01**: Button touch targets meet 44x44px minimum for mobile compatibility
+- [x] **CTRL-02**: Verb bar panel styling (dark background strip, SCUMM two-zone layout below scene)
+- [x] **CTRL-03**: Pixel art button icons created (16x16 or 32x32 sprites in MI palette) - Hybrid: text labels for Fight/Auto, speaker icon for mute
+- [x] **CTRL-04**: Pixel art icons replace emoji buttons for all three controls - Hybrid: speaker icon for mute, text labels for Fight/Auto
 
 ### Scene Presentation
 
@@ -77,10 +77,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | VFND-02 | Phase 1 | Complete |
 | VFND-03 | Phase 1 | Complete |
 | VFND-04 | Phase 1 | Complete |
-| CTRL-01 | Phase 2 | Pending |
-| CTRL-02 | Phase 2 | Pending |
-| CTRL-03 | Phase 2 | Pending |
-| CTRL-04 | Phase 2 | Pending |
+| CTRL-01 | Phase 2 | Complete |
+| CTRL-02 | Phase 2 | Complete |
+| CTRL-03 | Phase 2 | Complete |
+| CTRL-04 | Phase 2 | Complete |
 | SCNE-01 | Phase 3 | Pending |
 | SCNE-02 | Phase 3 | Pending |
 | SCNE-03 | Phase 3 | Pending |
@@ -94,4 +94,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-07*
-*Last updated: 2026-02-07 after Phase 1 completion*
+*Last updated: 2026-02-09 after Phase 2 completion*
