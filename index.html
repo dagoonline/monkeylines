@@ -35,6 +35,9 @@
             --mi-text: #e8d4a0;
             --mi-text-dark: #1a0a2e;
             --mi-border: #4a2d6e;
+            --mi-speaker-l: #e8c84c;
+            --mi-speaker-c: #3aaf8a;
+            --mi-speaker-r: #c87040;
         }
 
         * {
@@ -99,15 +102,27 @@
             top: 8%;
             left: 24%;
             width: 54%;
-            height: 14%;
+            height: 16%;
             padding: 4px 8px;
             font-family: 'Press Start 2P', monospace;
             font-size: clamp(8px, 1.4vw, 12px);
-            color: var(--mi-text-dark);
+            color: var(--mi-text);
             line-height: 1.2;
             text-align: left;
             overflow: hidden;
+            background: var(--mi-bg-dark);
+            background-clip: padding-box;
+            border: 4px solid var(--mi-border);
+            border-image-source: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAPElEQVR4nGM4scTmv5duHlEYpJYBxMjy7SMKg9TCNeh25+HFWDXgcgpeDQxoYChqIMnTJAUr0RFHatIAAJ50Cbj/EjFmAAAAAElFTkSuQmCC');
+            border-image-slice: 4;
+            border-image-width: 4px;
+            border-image-repeat: round;
+            image-rendering: pixelated;
         }
+
+        .speech-text[data-speaker="l"] { color: var(--mi-speaker-l); }
+        .speech-text[data-speaker="c"] { color: var(--mi-speaker-c); }
+        .speech-text[data-speaker="r"] { color: var(--mi-speaker-r); }
 
         .verb-bar {
             background: var(--mi-bg-dark);
@@ -340,6 +355,7 @@ function showOverlay(monkey) {
 
             function typeText(text, monkey) {
                 return new Promise(function(resolve) {
+                    el.setAttribute('data-speaker', monkey);
                     var visible = document.createElement('span');
                     var hidden = document.createElement('span');
                     hidden.style.visibility = 'hidden';
