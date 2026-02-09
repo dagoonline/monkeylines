@@ -45,7 +45,7 @@ Recent decisions affecting current work:
 - Self-hosted Press Start 2P font over Google Fonts CDN (no external dependencies)
 - CSS custom properties on :root for MI palette reuse (var(--mi-*))
 - Anti-aliasing disabled globally for pixel aesthetic
-- Text labels for verb bar buttons over pixel art icons (more authentic to SCUMM)
+- Hybrid verb bar: text labels for Fight/Auto, speaker icon for mute (smaller, right-aligned)
 
 ### Pending Todos
 
