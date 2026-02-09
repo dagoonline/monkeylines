@@ -79,6 +79,20 @@
             image-rendering: pixelated;
         }
 
+        .monkey-scene::before {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 0, transparent 50%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.2) 100%);
+            background-size: 100% 4px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
         .monkey-scene img {
             width: 100%;
             height: auto;
@@ -110,6 +124,7 @@
             line-height: 1.2;
             text-align: left;
             overflow: hidden;
+            z-index: 20;
         }
 
         .speech-text[data-speaker="l"] { color: var(--mi-speaker-l); }
@@ -201,6 +216,12 @@
 
         .verb-btn.active {
             border-color: var(--mi-teal);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .monkey-scene::before {
+                opacity: 0.5;
+            }
         }
 
         @media (max-aspect-ratio: 1/1) {
