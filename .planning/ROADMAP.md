@@ -34,10 +34,10 @@ Plans:
   1. Buttons display pixel art icons instead of emoji, styled in the MI palette
   2. Controls sit in a dark verb bar panel below the scene, visually separated from the viewport
   3. Every button is comfortably tappable on a phone (no mis-taps, no squinting)
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 02-01: TBD
+- [ ] 02-01-PLAN.md — Pixel art icons, verb bar panel, touch targets, mute toggle
 
 ### Phase 3: Scene and Speech
 **Goal**: The monkey scene and speech text feel like a framed game viewport with character-attributed dialog
@@ -73,6 +73,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Visual Foundation | 1/1 | Complete | 2026-02-07 |
-| 2. Control Panel | 0/? | Not started | - |
+| 2. Control Panel | 0/1 | Not started | - |
 | 3. Scene and Speech | 0/? | Not started | - |
 | 4. Polish | 0/? | Not started | - |
