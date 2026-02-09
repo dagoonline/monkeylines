@@ -48,10 +48,10 @@ Plans:
   2. Speech text color differs per monkey head so the viewer can tell who is speaking
   3. Speech bubble has a pixel-art styled border that scales correctly and does not break text fitting
   4. Scalable 9-slice borders render without stretching or blurring artifacts
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 03-01: TBD
+- [ ] 03-01-PLAN.md — Scene frame, per-speaker text colors, and speech bubble 9-slice restyle
 
 ### Phase 4: Polish
 **Goal**: Subtle retro effects add finishing authenticity without hurting usability
@@ -74,5 +74,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Visual Foundation | 1/1 | Complete | 2026-02-07 |
 | 2. Control Panel | 1/1 | Complete | 2026-02-09 |
-| 3. Scene and Speech | 0/? | Not started | - |
+| 3. Scene and Speech | 0/1 | Not started | - |
 | 4. Polish | 0/? | Not started | - |
