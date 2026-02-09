@@ -2,19 +2,18 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-07)
+See: .planning/PROJECT.md (updated 2026-02-09)
 
 **Core value:** Immediate clarity, nostalgic recognition, and delight — no confusion, just charm
-**Current focus:** Complete
+**Current focus:** v1.0 shipped — Planning next milestone
 
 ## Current Position
 
-Phase: 4 of 4 (Polish)
-Plan: 1 of 1 in current phase
-Status: All phases complete
-Last activity: 2026-02-09 — Completed 04-01-PLAN.md (CRT scanline overlay)
+Milestone: v1.0 MVP ✅ SHIPPED
+Status: Ready for next milestone planning
+Last activity: 2026-02-09 — v1.0 milestone complete
 
-Progress: [██████████] 100% of milestone (4/4 phases)
+Progress: [██████████] v1.0 complete (4/4 phases)
 
 ## Performance Metrics
 
@@ -41,31 +40,19 @@ Progress: [██████████] 100% of milestone (4/4 phases)
 
 ### Decisions
 
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
-
-- Self-hosted Press Start 2P font over Google Fonts CDN (no external dependencies)
-- CSS custom properties on :root for MI palette reuse (var(--mi-*))
-- Anti-aliasing disabled globally for pixel aesthetic
-- Hybrid verb bar: text labels for Fight/Auto, speaker icon for mute (smaller, right-aligned)
-- Inline base64 data URIs for pixel-art border PNGs (no extra asset files)
-- data-speaker attribute pattern for per-monkey CSS styling
-- Use background image speech bubble instead of CSS border-image overlay
-- CSS-only scanline approach (repeating gradient on pseudo-element) for Phase 4
-- Opacity 0.2 for CRT scanlines (balances visibility with readability)
-- 6px scanline pattern (adjusted from 4px based on user visual preference)
-- Opacity reduction (not removal) for prefers-reduced-motion accessibility
+All v1.0 decisions logged in PROJECT.md Key Decisions table (13 decisions with outcomes).
 
 ### Pending Todos
 
-None.
+None — milestone complete.
 
 ### Blockers/Concerns
 
-None. All phases complete.
+None — all v1.0 requirements validated.
 
 ## Session Continuity
 
-Last session: 2026-02-09T14:38:00Z
-Stopped at: Completed 04-01-PLAN.md (all phases complete)
+Last session: 2026-02-09
+Stopped at: v1.0 milestone complete and archived
 Resume file: None
+Next action: `/gsd:new-milestone` when ready to plan v2.0 or next version
